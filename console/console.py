@@ -50,11 +50,18 @@ class ColorTable(object):
 class Console(object):
   def __init__(self):
     self._console = curses.initscr()
-    self._colors = ColorTable()
+    self._colors = None
     self._initialize()
 
   def nonBlocking(self):
     self._console.nodelay(True)
+    return self
+
+  def colorOn(self):
+    if curses.has_colors():
+      curses.start_color()
+      self._colors = ColorTable()
+      self._noColor = ColorTable()
     return self
 
   def run(self, func):
@@ -65,7 +72,7 @@ class Console(object):
     return self
 
   def write(self, string, fg=Color.WHITE, bg=Color.BLACK):
-    self._console.addstr(string, self._colors.id(fg, bg))
+    self._console.addstr(string, self._colors.id(fg, bg) if self._colors else 0)
     return self
 
   def clear(self):
@@ -87,5 +94,4 @@ class Console(object):
     locale.setlocale(locale.LC_ALL, '')
     curses.noecho()
     curses.cbreak()
-    curses.start_color()
     self._console.keypad(True)

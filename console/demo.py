@@ -28,7 +28,7 @@ class Walk(object):
 
   def __init__(self):
     self._coord = Coord(1, 1)
-    self._console = Console().nonBlocking()
+    self._console = Console().colorOn().nonBlocking()
 
   def run(self):
     self.render()
