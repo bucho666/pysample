@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import random
 from console import Console
+from console import Color
+
 
 class Coord(object):
   def __init__(self, x, y):
@@ -25,20 +28,27 @@ class Walk(object):
 
   def __init__(self):
     self._coord = Coord(1, 1)
+    self._console = Console().nonBlocking()
 
-  def initialize(self, screen):
-    self.render(screen)
+  def run(self):
+    self.render()
+    interval = int(1000/30)
+    while True:
+      self.update()
+      self._console.sleep(interval)
 
-  def update(self, screen, key):
+  def update(self):
+    key = self._console.getKey()
     self._coord += Walk.KeyMap.get(key, Coord(0, 0))
-    self.render(screen)
+    self.render()
 
-  def render(self, screen):
-    screen.clear()
-    screen.move(Coord(1, 2)).write("+", "light yellow")
-    screen.move(Coord(3, 4)).write("T", "green", "blue")
-    screen.move(Coord(5, 6)).write("*", "light yellow", "green")
-    screen.move(self._coord).write("@", "white").move(self._coord)
+  def render(self):
+    self._console.clear()
+    self._console.move(Coord(1, 2)).write("+", Color.LIGHT_YELLOW)
+    self._console.move(Coord(3, 4)).write("T", Color.GREEN, Color.BLUE)
+    self._console.move(Coord(5, 6)).write("*", Color.LIGHT_YELLOW, Color.GREEN)
+    self._console.move(Coord(7, 8)).write("&", random.choice(list(Color.LIST)))
+    self._console.move(self._coord).write("@", Color.LIGHT_YELLOW).move(self._coord)
 
 if __name__ == '__main__':
-  Console(Walk()).run()
+  Walk().run()
