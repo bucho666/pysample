@@ -77,7 +77,7 @@ class Console(object):
 
   def getKey(self):
     key = self._console.getch()
-    if key is -1: return ''
+    if key is -1: return None
     return chr(key)
 
   def sleep(self, msec):
